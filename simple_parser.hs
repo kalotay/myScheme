@@ -17,7 +17,11 @@ data LispVal = Atom String
 
 parseString :: Parser LispVal
 parseString = do { char '"';
-        x <- many (noneOf "\"");
+        x <- many (noneOf "\"" <|> do { char '\\'
+            ; x <- char '"'
+            ; return x
+            }
+        );
         char '"';
         return $ String x;
 }
